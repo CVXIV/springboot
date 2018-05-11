@@ -3,6 +3,7 @@ package com.example.springboot;
 import com.example.springboot.filter.TimeFilter;
 import com.example.springboot.listener.ListenerTest;
 import com.example.springboot.servlet.ServletTest;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -13,6 +14,7 @@ import java.util.EnumSet;
 
 
 @SpringBootApplication
+@MapperScan("com.example.springboot.dao")
 public class SpringbootApplication implements ServletContextInitializer {
 
 	public static void main(String[] args) {

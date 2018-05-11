@@ -2,8 +2,11 @@ package com.example.springboot.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.io.Serializable;
 import java.util.Date;
-public class User {
+public class User implements Serializable{
+    private static final long serialVersionUID = -6249397911566315813L;
+
     private Integer id;
 
     private String username;

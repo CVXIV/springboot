@@ -61,9 +61,7 @@ public class WebSocketServer extends TextWebSocketHandler {
         // 广播形式发送消息
         for (WebSocketSession session : connections.keySet()) {
             try {
-                synchronized (WebSocketServer.class) {
-                    session.sendMessage(msg);
-                }
+                session.sendMessage(msg);
             } catch (Exception e) {
                 connections.remove(session);
                 try {

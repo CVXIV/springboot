@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="zh">
+<#assign basePath=request.contextPath>
 <head lang="zh">
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" href="${basePath}/css/bootstrap.min.css">
+    <script src="${basePath}/js/jquery-1.11.0.min.js"></script>
+    <script src="${basePath}/js/bootstrap.min.js"></script>
     <style type="text/css">
         #msg {
             height: 400px;
@@ -72,7 +72,7 @@
                 $("#logout").show();
             };
             websocket.onmessage = function(evnt) {
-                $("#msg").html($("#msg").html() + "<br/>" + evnt.data);
+                $('#msg').html($('#msg').html() + "<br/>" + evnt.data);
             };
             websocket.onerror = function(evnt) {
                 $("#tou").html("报错!")

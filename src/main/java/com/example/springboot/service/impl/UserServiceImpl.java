@@ -2,12 +2,12 @@ package com.example.springboot.service.impl;
 
 import com.example.springboot.dao.UserMapper;
 import com.example.springboot.pojo.User;
-import com.example.springboot.service.userService;
+import com.example.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("userService")
-public class userServiceImpl implements userService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;

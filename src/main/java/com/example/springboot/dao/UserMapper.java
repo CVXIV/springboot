@@ -1,7 +1,9 @@
 package com.example.springboot.dao;
 
 import com.example.springboot.pojo.User;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserMapper {
      int insert(User user);
 

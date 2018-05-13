@@ -2,7 +2,7 @@ package com.example.springboot.service;
 
 import com.example.springboot.pojo.User;
 
-public interface userService {
+public interface UserService {
     int insert(User user);
 
     int deleteById(Integer id);

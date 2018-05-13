@@ -1,14 +1,10 @@
 package com.example.springboot.configuration;
 
-import com.alibaba.druid.filter.Filter;
-import com.alibaba.druid.filter.stat.StatFilter;
-import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.example.springboot.websocket.WebSocketServer;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -28,7 +24,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 
@@ -107,23 +102,6 @@ public class WebConfig implements WebMvcConfigurer,WebSocketConfigurer {
                 return date;
             }
         };
-    }
-
-    @ConfigurationProperties(prefix = "spring.datasource.druid")
-    @Bean(initMethod = "init",destroyMethod = "close")
-    public DruidDataSource dataSource() {
-        DruidDataSource ds = new DruidDataSource();
-        ds.setProxyFilters(Arrays.asList(statFilter()));
-        return ds;
-    }
-
-    @Bean
-    public Filter statFilter() {
-        StatFilter filter = new StatFilter();
-        filter.setSlowSqlMillis(5000);
-        filter.setLogSlowSql(true);
-        filter.setMergeSql(true);
-        return filter;
     }
 
 }

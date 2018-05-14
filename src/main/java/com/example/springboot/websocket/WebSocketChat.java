@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WebSocketServer extends TextWebSocketHandler {
+public class WebSocketChat extends TextWebSocketHandler {
     private static final Map<WebSocketSession, String> connections = new ConcurrentHashMap<>();
 
     private static String getDatetime(Date date) {

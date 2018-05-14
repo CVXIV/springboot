@@ -33,16 +33,16 @@ public class JavaMailComponent {
         map.put("email", email);
         try {
             // 获取内容
-            String text = this.getTextByTemplate(template, map);
+            String text = this.getTextByTemplate(map);
             // 发送
             this.send(email, text);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private String getTextByTemplate(String template, Map<String, Object> model) throws Exception {
+    private String getTextByTemplate(Map<String, Object> model) throws Exception {
         return FreeMarkerTemplateUtils
-                .processTemplateIntoString(this.freeMarkerConfigurer.getConfiguration().getTemplate(template), model);
+                .processTemplateIntoString(this.freeMarkerConfigurer.getConfiguration().getTemplate(JavaMailComponent.template), model);
     }
     private void send(String email, String text) throws MessagingException, UnsupportedEncodingException, javax.mail.MessagingException {
         MimeMessage message = this.javaMailSender.createMimeMessage();

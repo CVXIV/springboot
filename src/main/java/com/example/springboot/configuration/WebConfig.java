@@ -3,7 +3,7 @@ package com.example.springboot.configuration;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.example.springboot.websocket.WebSocketServer;
+import com.example.springboot.websocket.WebSocketChat;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,13 +56,13 @@ public class WebConfig implements WebMvcConfigurer,WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketServer(), "/webSocketServer/*");
+        registry.addHandler(WebSocketChat(), "/webSocketServer/*");
     }
 
 
     @Bean
-    public WebSocketHandler webSocketServer() {
-        return new WebSocketServer();
+    public WebSocketHandler WebSocketChat() {
+        return new WebSocketChat();
     }
 
 

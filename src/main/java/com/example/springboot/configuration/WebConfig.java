@@ -4,6 +4,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.example.springboot.interceptor.LoginInterceptor;
+import com.example.springboot.interceptor.WebSocketInterceptor;
 import com.example.springboot.websocket.WebSocketChat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -17,6 +18,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.HandshakeInterceptor;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -61,12 +63,18 @@ public class WebConfig implements WebMvcConfigurer,WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(WebSocketChat(), "/webSocketServer/*");
+        //registry.addHandler().addInterceptors(WebSocketInterceptor());
     }
 
 
     @Bean
     public WebSocketHandler WebSocketChat() {
         return new WebSocketChat();
+    }
+
+    @Bean
+    public HandshakeInterceptor WebSocketInterceptor(){
+        return new WebSocketInterceptor();
     }
 
 

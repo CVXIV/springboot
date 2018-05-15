@@ -15,45 +15,68 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @EnableConfigurationProperties(MailProperties.class)
-public class JavaMailComponent {
+public class AuthMail {
 
     private static final String template = "mail.ftl";
-    @Autowired
-    private FreeMarkerConfigurer freeMarkerConfigurer;
+    private static final int codeLength=4;
+    private static final Map<String,String> checkCode=new ConcurrentHashMap<>();
+    private final FreeMarkerConfigurer freeMarkerConfigurer;
+    private final JavaMailSender javaMailSender;
+    private final MailProperties mailProperties;
 
     @Autowired
-    private JavaMailSender javaMailSender;
-    @Autowired
-    private MailProperties mailProperties;
-    public void sendMail(String email) {
+    public AuthMail(FreeMarkerConfigurer freeMarkerConfigurer, JavaMailSender javaMailSender, MailProperties mailProperties){
+        this.freeMarkerConfigurer=freeMarkerConfigurer;
+        this.javaMailSender=javaMailSender;
+        this.mailProperties=mailProperties;
+    }
+    public void sendMail(String email) throws Exception {
         Map<String, Object> map = new HashMap<>();
+        String code=getRandomCode();
         map.put("email", email);
-        try {
-            // 获取内容
-            String text = this.getTextByTemplate(map);
-            // 发送
-            this.send(email, text);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        map.put("code",code);
+        String text = this.getTextByTemplate(map);
+        this.send(email, text);
+        checkCode.put(email,code);
     }
     private String getTextByTemplate(Map<String, Object> model) throws Exception {
         return FreeMarkerTemplateUtils
-                .processTemplateIntoString(this.freeMarkerConfigurer.getConfiguration().getTemplate(JavaMailComponent.template), model);
+                .processTemplateIntoString(this.freeMarkerConfigurer.getConfiguration().getTemplate(AuthMail.template), model);
     }
     private void send(String email, String text) throws MessagingException, UnsupportedEncodingException, javax.mail.MessagingException {
         MimeMessage message = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         InternetAddress from = new InternetAddress();
         from.setAddress(this.mailProperties.getUsername());
-        from.setPersonal("黄小凡", "UTF-8");
+        from.setPersonal("验证码", "UTF-8");
         helper.setFrom(from);
         helper.setTo(email);
-        helper.setSubject("SpringBoot 发送的第一封邮件");
+        helper.setSubject("验证码邮件");
         helper.setText(text, true);
         this.javaMailSender.send(message);
+    }
+
+    private  String getRandomCode() {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < codeLength; ++i) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
+    }
+
+    public boolean checkCode(String code,String email){
+        String result=checkCode.get(email);
+        if(result==null||!result.equals(code)){
+            return false;
+        }else {
+            checkCode.remove(email);
+            return true;
+        }
     }
 }

@@ -14,4 +14,9 @@ public class NormalController {
     public String test(){
         return "test";
     }
+
+    @GetMapping("/auth")
+    public String auth(){
+        return "authCode";
+    }
 }

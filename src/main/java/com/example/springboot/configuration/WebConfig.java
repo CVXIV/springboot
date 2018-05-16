@@ -3,16 +3,14 @@ package com.example.springboot.configuration;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.example.springboot.interceptor.LoginInterceptor;
 import com.example.springboot.interceptor.WebSocketInterceptor;
 import com.example.springboot.websocket.WebSocketChat;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.springboot.websocket.WebSocketPush;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -37,7 +35,7 @@ import java.util.Date;
 @EnableSwagger2
 public class WebConfig implements WebMvcConfigurer,WebSocketConfigurer {
 
-    private final LoginInterceptor loginInterceptor;
+    /*private final LoginInterceptor loginInterceptor;
 
     @Autowired
     public WebConfig(LoginInterceptor loginInterceptor) {
@@ -47,7 +45,7 @@ public class WebConfig implements WebMvcConfigurer,WebSocketConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor);
-    }
+    }*/
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
@@ -63,13 +61,18 @@ public class WebConfig implements WebMvcConfigurer,WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(WebSocketChat(), "/webSocketServer/*");
-        //registry.addHandler().addInterceptors(WebSocketInterceptor());
+        registry.addHandler(WebSocketPush(),"/webSocketPush").addInterceptors(WebSocketInterceptor());
     }
 
 
     @Bean
     public WebSocketHandler WebSocketChat() {
         return new WebSocketChat();
+    }
+
+    @Bean
+    public WebSocketHandler WebSocketPush(){
+        return new WebSocketPush();
     }
 
     @Bean

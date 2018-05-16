@@ -1,8 +1,7 @@
 package com.example.springboot;
 
-import com.example.springboot.filter.TimeFilter;
+import com.example.springboot.filter.LoginFilter;
 import com.example.springboot.listener.ListenerTest;
-import com.example.springboot.servlet.ServletTest;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,10 +23,10 @@ public class SpringbootApplication implements ServletContextInitializer {
     @Override
     public void onStartup(ServletContext servletContext){
         // 配置 Servlet
-        servletContext.addServlet("servletTest",new ServletTest())
-                .addMapping("/servletTest");
+        /*servletContext.addServlet("servletTest",new ServletTest())
+                .addMapping("/servletTest");*/
         // 配置过滤器
-        servletContext.addFilter("timeFilter",new TimeFilter())
+        servletContext.addFilter("LoginFilter",new LoginFilter())
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
         // 配置监听器
         servletContext.addListener(new ListenerTest());

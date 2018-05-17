@@ -11,6 +11,10 @@
         select * from user where id = #{id}
     </select>
 
+    <select id="getByName" parameterType="java.lang.String" resultType="com.example.springboot.pojo.User">
+        select * from user where username = #{username}
+    </select>
+
     <update id="update" parameterType="com.example.springboot.pojo.User">
         update user set username = #{username} where id = #{id}
     </update>

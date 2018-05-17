@@ -12,4 +12,6 @@ public interface UserMapper {
      int update(User user);
 
      User getById(Integer id);
+
+    User getByName(String username);
 }

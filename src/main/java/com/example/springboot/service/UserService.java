@@ -10,4 +10,6 @@ public interface UserService {
     int update(User user);
 
     User getById(Integer id);
+
+    User getByName(String username);
 }

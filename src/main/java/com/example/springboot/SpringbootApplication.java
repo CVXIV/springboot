@@ -27,7 +27,7 @@ public class SpringbootApplication implements ServletContextInitializer {
                 .addMapping("/servletTest");*/
         // 配置过滤器
         servletContext.addFilter("LoginFilter",new LoginFilter())
-                .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
+                .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/fun/*");
         // 配置监听器
         servletContext.addListener(new ListenerTest());
     }

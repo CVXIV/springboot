@@ -18,7 +18,11 @@ public class LoginFilter implements Filter {
         HttpServletResponse httpServletResponse=(HttpServletResponse)response;
         String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+httpServletRequest.getContextPath()+"/";
         HttpSession session=httpServletRequest.getSession();
-
+        Integer user=(Integer) session.getAttribute("user");
+        if(user==null){
+            httpServletResponse.sendRedirect(basePath+"login/initPage");
+            return;
+        }
         filterChain.doFilter(request,response);
     }
 

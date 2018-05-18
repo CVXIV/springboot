@@ -33,7 +33,7 @@
     $(function() {
         $("#getCode").bind("click",function () {
             $.ajax({
-                url: "getAuthCode",
+                url: "restful",
                 type: "get",
                 data:{"email":$("#email").val()},
                 dataType: "json",

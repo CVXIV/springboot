@@ -20,7 +20,7 @@ public class LoginFilter implements Filter {
         HttpSession session=httpServletRequest.getSession();
         Integer user=(Integer) session.getAttribute("user");
         if(user==null){
-            httpServletResponse.sendRedirect(basePath+"login/initPage");
+            httpServletResponse.sendRedirect(basePath+"login/loginPage");
             return;
         }
         filterChain.doFilter(request,response);

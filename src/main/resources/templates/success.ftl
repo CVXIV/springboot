@@ -9,6 +9,7 @@
 <body>
 <p>登陆成功</p>
 <p><strong id="result"></strong></p>
+<button type="button" id="logout">注销</button>
 <script type="text/javascript" src="${basePath}/js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
     $(function() {
@@ -20,7 +21,7 @@
             webSocket = new MozWebSocket(address);
         }
         webSocket.onclose=function () {
-            $("#result").html("断开连接");
+            window.location="${basePath}/login/loginPage"
         };
         webSocket.onopen=function (evnt) {
             $("#result").html(evnt.data);
@@ -29,8 +30,12 @@
             $("#result").html("连接出错");
         };
         webSocket.onmessage=function (evnt) {
-            $("#result").html(evnt.data);
+            alert(evnt.data);
         };
+
+        $("#logout").bind("click",function () {
+            window.location="${basePath}/login/logout";
+        });
     });
 </script>
 </body>

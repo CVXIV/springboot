@@ -11,12 +11,10 @@ import java.util.Map;
 
 public class WebSocketInterceptor implements HandshakeInterceptor {
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler webSocketHandler, Map<String, Object> map){
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;
             HttpSession session = serverHttpRequest.getServletRequest().getSession();
-            Map parameterMap = serverHttpRequest.getServletRequest().getParameterMap();
-            System.out.println(parameterMap);
             if (session != null) {
                 map.put("user", session.getAttribute("user"));
             }

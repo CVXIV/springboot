@@ -6,12 +6,13 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import java.util.EnumSet;
 
-
+@EnableCaching
 @SpringBootApplication
 @MapperScan("com.example.springboot.dao")
 public class SpringbootApplication implements ServletContextInitializer {

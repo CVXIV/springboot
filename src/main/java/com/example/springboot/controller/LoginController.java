@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,33 +26,52 @@ public class LoginController {
         this.webSocketPush = webSocketPush;
     }
 
-    @GetMapping("/check")
-    public String check(HttpSession session){
-        if(session.getAttribute("user")!=null){
-            return "success";
+
+    @RequestMapping("/checkUser")
+    public String checkUser(User user,RedirectAttributes attr) {
+        String username=user.getUsername();
+        User result;
+        //如果直接通过URL调用或者正常登录，但密码或用户名不正确，直接返回首页
+        if(username==null||(result=userService.getByName(username))==null||!result.getPassword().equals(user.getPassword())){
+            return "redirect:/login/loginPage";
+        }
+        attr.addAttribute("user",result.getId());
+        return "redirect:/login/success";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        Integer user=(Integer) session.getAttribute("user");
+        if(user!=null){
+            currentUsers.remove(user);
+            session.removeAttribute("user");
         }
         return "redirect:/login/loginPage";
     }
 
-    @RequestMapping("/checkUser")
-    public String checkUser(HttpServletRequest request, User user) {
-        String username=user.getUsername();
-        //如果直接通过URL调用
-        if(username==null){
-            return "redirect:/login/check";
+    @GetMapping("/loginPage")
+    public String loginPage(HttpSession session){
+        Integer user=(Integer)session.getAttribute("user");
+        if(user!=null){
+            currentUsers.remove(user);
+            session.removeAttribute("user");
         }
-        User result=userService.getByName(username);
-        //如果正常登录，但密码或用户名不正确，直接返回首页
-        if(result==null||!result.getPassword().equals(user.getPassword())){
+        return "loginPage";
+    }
+
+    @RequestMapping("/success")
+    public String success(HttpServletRequest request,Integer user){
+        if(user==null){
             return "redirect:/login/loginPage";
         }
         synchronized (currentUsers){
             HttpSession newsession=request.getSession();
             //如果该用户已经登录
-            if(currentUsers.containsKey(result.getId())){
-                HttpSession oldsession=currentUsers.get(result.getId());
-                webSocketPush.sendErrorMessageToOne("不能同时登陆两个账号",result.getId());
-                currentUsers.remove(result.getId());
+            if(currentUsers.containsKey(user)){
+                HttpSession oldsession=currentUsers.get(user);
+                webSocketPush.sendErrorMessageToOne("不能同时登陆两个账号",user);
+                currentUsers.remove(user);
                 oldsession.removeAttribute("user");
             }else{
                 //该用户没有登录，但用的是同一个浏览器
@@ -65,27 +85,10 @@ public class LoginController {
                     }
                 }
             }
-            newsession.setAttribute("user",result.getId());
-            currentUsers.put(result.getId(),newsession);
+            newsession.setAttribute("user",user);
+            currentUsers.put(user,newsession);
         }
         return "success";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
-        HttpSession session=request.getSession();
-        Integer user=(Integer) session.getAttribute("user");
-        if(user!=null){
-            webSocketPush.sendErrorMessageToOne("你已下线",user);
-            currentUsers.remove(user);
-            session.removeAttribute("user");
-        }
-        return "redirect:/login/loginPage";
-    }
-
-    @GetMapping("/loginPage")
-    public String loginPage(){
-        return "loginPage";
     }
 
 }

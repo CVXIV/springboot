@@ -7,8 +7,8 @@
 </head>
 
 <body>
-<p>登陆成功</p>
-<p><strong id="result"></strong></p>
+<p>连接状态：<strong id="status"></strong></p>
+<p>对话信息：<strong id="result"></strong></p>
 <button type="button" id="logout">注销</button>
 <script type="text/javascript" src="${basePath}/js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
@@ -21,16 +21,18 @@
             webSocket = new MozWebSocket(address);
         }
         webSocket.onclose=function () {
-            window.location="${basePath}/login/loginPage"
+            $("#status").html("连接已断开");
+            $("#logout").prop("disabled","ture");
         };
         webSocket.onopen=function (evnt) {
+            $("#status").html("已成功连接");
             $("#result").html(evnt.data);
         };
         webSocket.onerror=function () {
             $("#result").html("连接出错");
         };
         webSocket.onmessage=function (evnt) {
-            alert(evnt.data);
+            $("#result").html(evnt.data);
         };
 
         $("#logout").bind("click",function () {

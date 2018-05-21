@@ -2,7 +2,10 @@ package com.example.springboot.controller;
 
 import com.example.springboot.pojo.FileInfo;
 import org.apache.commons.io.IOUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,14 +34,14 @@ public class FileController {
         return new FileInfo(localFile.getAbsolutePath());
     }
 
-    @GetMapping("/{id}")
-    public void download(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
-        try (InputStream inputStream = new FileInputStream(new File(path, id + ".txt"));
+    @GetMapping("/download")
+    public void download(HttpServletRequest request, HttpServletResponse response) {
+        String filename="1.jpg";
+        try (InputStream inputStream = new FileInputStream(new File(path, filename));
              OutputStream outputStream = response.getOutputStream()) {
 
             response.setContentType("application/x-download");
-            response.addHeader("Content-Disposition", "attachment;filename=" + id + ".txt");
-
+            response.addHeader("Content-Disposition", "attachment;filename=" + filename);
             IOUtils.copy(inputStream, outputStream);
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,6 +16,7 @@ public class WebSocketPush implements WebSocketHandler {
         Integer userId= getUserId(webSocketSession);
         if(userId!=null){
             users.put(userId,webSocketSession);
+            logger.info("建立webSocket连接");
             webSocketSession.sendMessage(new TextMessage("成功建立连接"));
         }else{
             if(webSocketSession.isOpen())
